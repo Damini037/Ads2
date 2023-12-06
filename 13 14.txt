@@ -1,0 +1,125 @@
+CREATE OR REPLACE PROCEDURE calculate_even_odd_sum(p_n IN NUMBER) IS
+    v_even_sum NUMBER := 0;
+    v_odd_sum NUMBER := 0;
+BEGIN
+    FOR i IN 1..p_n LOOP
+        IF MOD(i, 2) = 0 THEN
+            v_even_sum := v_even_sum + i;
+        ELSE
+            v_odd_sum := v_odd_sum + i;
+        END IF;
+    END LOOP;
+
+    DBMS_OUTPUT.PUT_LINE('Sum of even numbers up to ' || p_n || ': ' || v_even_sum);
+    DBMS_OUTPUT.PUT_LINE('Sum of odd numbers up to ' || p_n || ': ' || v_odd_sum);
+END calculate_even_odd_sum;
+/
+
+-- Example usage:
+DECLARE
+    n_value NUMBER := 10; -- Change the value of n as needed
+BEGIN
+    calculate_even_odd_sum(n_value);
+END;
+/
+
+
+-- Create a package to represent the Circle object
+CREATE OR REPLACE PACKAGE CirclePackage AS
+    TYPE Circle IS OBJECT (
+        radius NUMBER,
+        MEMBER FUNCTION calculate_area RETURN NUMBER,
+        MEMBER FUNCTION calculate_perimeter RETURN NUMBER
+    );
+
+    -- Create a constructor function for the Circle object
+    FUNCTION CreateCircle(radius NUMBER) RETURN Circle;
+END CirclePackage;
+/
+
+CREATE OR REPLACE PACKAGE BODY CirclePackage AS
+    FUNCTION CreateCircle(radius NUMBER) RETURN Circle IS
+    BEGIN
+        RETURN Circle(radius);
+    END CreateCircle;
+
+    MEMBER FUNCTION Circle.calculate_area RETURN NUMBER IS
+    BEGIN
+        RETURN 3.14 * self.radius * self.radius;
+    END calculate_area;
+
+    MEMBER FUNCTION Circle.calculate_perimeter RETURN NUMBER IS
+    BEGIN
+        RETURN 2 * 3.14 * self.radius;
+    END calculate_perimeter;
+END CirclePackage;
+/
+
+-- Example of using the Circle object
+DECLARE
+    -- Declare a Circle object
+    my_circle CirclePackage.Circle := CirclePackage.CreateCircle(5);
+
+    -- Variables to store area and perimeter
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    -- Calculate area and perimeter using object methods
+    area := my_circle.calculate_area();
+    perimeter := my_circle.calculate_perimeter();
+
+    -- Display the results
+    DBMS_OUTPUT.PUT_LINE('Area of the circle: ' || area);
+    DBMS_OUTPUT.PUT_LINE('Perimeter of the circle: ' || perimeter);
+END;
+/
+
+-- Create a package to represent the Square object
+CREATE OR REPLACE PACKAGE SquarePackage AS
+    TYPE Square IS OBJECT (
+        side NUMBER,
+        MEMBER FUNCTION calculate_area RETURN NUMBER,
+        MEMBER FUNCTION calculate_perimeter RETURN NUMBER
+    );
+
+    -- Create a constructor function for the Square object
+    FUNCTION CreateSquare(side NUMBER) RETURN Square;
+END SquarePackage;
+/
+
+CREATE OR REPLACE PACKAGE BODY SquarePackage AS
+    FUNCTION CreateSquare(side NUMBER) RETURN Square IS
+    BEGIN
+        RETURN Square(side);
+    END CreateSquare;
+
+    MEMBER FUNCTION Square.calculate_area RETURN NUMBER IS
+    BEGIN
+        RETURN self.side * self.side;
+    END calculate_area;
+
+    MEMBER FUNCTION Square.calculate_perimeter RETURN NUMBER IS
+    BEGIN
+        RETURN 4 * self.side;
+    END calculate_perimeter;
+END SquarePackage;
+/
+
+-- Example of using the Square object
+DECLARE
+    -- Declare a Square object
+    my_square SquarePackage.Square := SquarePackage.CreateSquare(5);
+
+    -- Variables to store area and perimeter
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    -- Calculate area and perimeter using object methods
+    area := my_square.calculate_area();
+    perimeter := my_square.calculate_perimeter();
+
+    -- Display the results
+    DBMS_OUTPUT.PUT_LINE('Area of the square: ' || area);
+    DBMS_OUTPUT.PUT_LINE('Perimeter of the square: ' || perimeter);
+END;
+/

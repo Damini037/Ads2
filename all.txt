@@ -1,0 +1,1121 @@
+---------------------------------------EXP1-17------------------------------
+CREATE TABLE Student (
+    IDCardnumber INT PRIMARY KEY,
+    RollNumber INT UNIQUE,
+    Stud_Name VARCHAR(255),
+    Class VARCHAR(10),
+    Branch VARCHAR(50)
+);
+
+-- Create Book Table
+CREATE TABLE Book (
+    BookID INT PRIMARY KEY,
+    Book_Name VARCHAR(255),
+    Author VARCHAR(255),
+    Price DECIMAL(10, 2)
+);
+
+-- Create Issue Table
+CREATE TABLE Issue (
+    IDCardnumber INT,
+    BookID INT,
+    IssueDate DATE,
+    SubmissionDate DATE,
+    PRIMARY KEY (IDCardnumber, BookID),
+    FOREIGN KEY (IDCardnumber) REFERENCES Student(IDCardnumber),
+    FOREIGN KEY (BookID) REFERENCES Book(BookID)
+);
+
+-- Insert values into Student Table
+INSERT INTO Student VALUES
+    (123456789, 101, 'John Doe', '10th', 'Science');
+INSERT INTO Student VALUES
+    (987654321, 202, 'Jane Smith', '12th', 'Arts');
+INSERT INTO Student VALUES
+    (987654320, 203, 'Jane', 'FY', 'CSE');
+
+-- Insert values into Book Table
+INSERT INTO Book VALUES
+    (1, 'The Great Gatsby', 'F. Scott Fitzgerald', 15.99);
+INSERT INTO Book VALUES
+    (2, 'To Kill a Mockingbird', 'Harper Lee', 12.50);
+Insert into Book values(3,'java edition','xyz',22.2);
+
+-- Insert values into Issue Table in Oracle SQL
+INSERT INTO Issue (IDCardnumber, BookID, IssueDate, SubmissionDate) VALUES
+    (123456789, 1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), TO_DATE('2023-02-15', 'YYYY-MM-DD'));
+INSERT INTO Issue (IDCardnumber, BookID, IssueDate, SubmissionDate) VALUES
+    (987654321, 2, TO_DATE('2023-02-01', 'YYYY-MM-DD'), TO_DATE('2023-03-01', 'YYYY-MM-DD'));
+
+
+1.
+
+SELECT COUNT(*) AS TotalStudents
+FROM Student 
+JOIN Issue ON Student.IDCardnumber = Issue.IDCardnumber
+WHERE Student.Branch = 'CSE';
+
+2.
+
+
+SELECT Student.IDCardnumber, Student.RollNumber, Student.Stud_Name
+FROM Student
+LEFT JOIN Issue ON Student.IDCardnumber = Issue.IDCardnumber
+WHERE Issue.IDCardnumber IS NULL;
+
+3.
+
+SELECT BookID, Book_Name, Author, Price
+FROM Book
+WHERE Price = (
+    SELECT MAX(Price)
+    FROM Book
+    WHERE Price < (SELECT MAX(Price) FROM Book)
+);
+
+4.
+
+SELECT S.Branch, COUNT(DISTINCT I.IDCardnumber) AS StudentsCount
+FROM Student S
+LEFT JOIN Issue I ON S.IDCardnumber = I.IDCardnumber
+GROUP BY S.Branch;
+
+5.
+
+SELECT B.Book_Name, S.Stud_Name, I.IssueDate, I.SubmissionDate
+FROM Issue I
+JOIN Student S ON I.IDCardnumber = S.IDCardnumber
+JOIN Book B ON I.BookID = B.BookID;
+
+--------------------------------------------EXP2-------------------------------------------
+
+
+DECLARE
+N NUMBER := 10; 
+sum_resul NUMBER:=0;
+BEGIN
+FOR i IN 1..N LOOP
+sum_result := sum_result + i;
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('Sum of first ' || N || ' numbers is: ' ||  sum_result);
+END;/
+
+DECLARE
+num NUMBER := 5; -- You can replace 5 with any desired number
+factorial_result NUMBER := 1;
+BEGIN
+FOR i IN 1..num LOOP
+factorial_result := factorial_result * i;
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('Factorial of ' || num || ' is: ' || factorial_result);
+END;/
+
+
+
+
+DECLARE
+choice NUMBER := 2;
+radius NUMBER := 5;
+
+area_result NUMBER;
+BEGIN
+CASE choice
+WHEN 1 THEN
+area_result := 3.14 * radius * radius; -- Area of Circle
+WHEN 2 THEN
+area_result := 0.5 * radius * radius; -- Area of Triangle
+ELSE
+area_result := 0; -- Default case or error handling
+END CASE;
+DBMS_OUTPUT.PUT_LINE('Area is: ' || area_result);
+END;/
+
+
+---------------------------------------EXP3---------------------------------------------------------
+
+DECLARE
+choice NUMBER := 2;
+radius NUMBER := 5;
+
+area_result NUMBER;
+BEGIN
+CASE choice
+WHEN 1 THEN
+area_result := 3.14 * radius * radius; -- Area of Circle
+WHEN 2 THEN
+area_result := 0.5 * radius * radius; -- Area of Triangle
+ELSE
+area_result := 0; -- Default case or error handling
+END CASE;
+DBMS_OUTPUT.PUT_LINE('Area is: ' || area_result);
+END;/
+
+
+CREATE TABLE Employee1 (
+   EmployeeID NUMBER PRIMARY KEY,
+   Ename VARCHAR2(50),
+   Salary NUMBER,
+   City VARCHAR2(50)
+);
+
+CREATE SEQUENCE EmployeeIDSequence
+   START WITH 1
+   INCREMENT BY 1
+   NOCACHE
+   NOCYCLE;
+
+INSERT INTO Employee1(EmployeeID, Ename, Salary, City)
+VALUES (EmployeeIDSequence.NEXTVAL, 'John Doe', 60000, 'New York');
+
+INSERT INTO Employee1(EmployeeID, Ename, Salary, City)
+VALUES (EmployeeIDSequence.NEXTVAL, 'John', 6000, 'New York');
+
+select * from Employee1;
+
+DELETE FROM Employee1 WHERE EmployeeID = 1;
+
+-------------------------------------------------------EXP4---------------------------------------
+
+
+CREATE TYPE Rectangle AS OBJECT (
+length NUMBER,
+width NUMBER,
+MEMBER FUNCTION Area RETURN NUMBER,
+MEMBER FUNCTION Perimeter RETURN NUMBER
+);
+
+
+
+
+
+CREATE TYPE BODY Rectangle AS
+MEMBER FUNCTION Area RETURN NUMBER IS
+BEGIN
+RETURN length * width;
+END;
+MEMBER FUNCTION Perimeter RETURN NUMBER IS
+BEGIN
+RETURN 2 * (length + width);
+END;
+END;
+
+
+
+
+
+DECLARE
+rect Rectangle := Rectangle(5, 10);
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Area: ' || rect.Area);
+DBMS_OUTPUT.PUT_LINE('Perimeter: ' || rect.Perimeter);
+END;
+
+
+
+
+
+-- Create Location Table
+CREATE TABLE Location (
+    LID NUMBER PRIMARY KEY,
+    City VARCHAR2(50),
+    State VARCHAR2(50),
+    Country VARCHAR2(50)
+);
+
+-- Create Product Table
+CREATE TABLE Product (
+    PID NUMBER PRIMARY KEY,
+    Pname VARCHAR2(50),
+    Price NUMBER,
+    Category VARCHAR2(50)
+);
+
+-- Create Customer Table
+CREATE TABLE Customer (
+    CID NUMBER PRIMARY KEY,
+    Cname VARCHAR2(50),
+    Cust_City VARCHAR2(50),
+    Cust_State VARCHAR2(50)
+);
+
+-- Create TimeLine Table
+CREATE TABLE TimeLine (
+    TID NUMBER PRIMARY KEY,
+    SaleDate DATE,
+    SaleDay VARCHAR2(10),
+    Month VARCHAR2(20),
+    Year NUMBER
+);
+
+-- Create Sales Table
+CREATE TABLE Sales (
+    CID NUMBER,
+    LID NUMBER,
+    TID NUMBER,
+    PID NUMBER,
+    Quantity NUMBER,
+    FOREIGN KEY (CID) REFERENCES Customer(CID),
+    FOREIGN KEY (LID) REFERENCES Location(LID),
+    FOREIGN KEY (TID) REFERENCES TimeLine(TID),
+    FOREIGN KEY (PID) REFERENCES Product(PID)
+);
+
+-- Insert values into Location Table
+INSERT INTO Location VALUES (1, 'CityA', 'StateA', 'CountryA');
+INSERT INTO Location VALUES (2, 'CityB', 'StateB', 'CountryB');
+
+-- Insert values into Product Table
+INSERT INTO Product VALUES (1, 'ProductA', 20.99, 'CategoryA');
+INSERT INTO Product VALUES (2, 'ProductB', 15.50, 'CategoryB');
+
+-- Insert values into Customer Table
+INSERT INTO Customer VALUES (1, 'CustomerA', 'CityA', 'StateA');
+INSERT INTO Customer VALUES (2, 'CustomerB', 'CityB', 'StateB');
+
+-- Insert values into TimeLine Table
+INSERT INTO TimeLine VALUES (1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), 'Monday', 'January', 2023);
+INSERT INTO TimeLine VALUES (2, TO_DATE('2023-02-01', 'YYYY-MM-DD'), 'Wednesday', 'February', 2023);
+
+-- Insert values into Sales Table
+INSERT INTO Sales VALUES (1, 1, 1, 1, 5);
+INSERT INTO Sales VALUES (2, 2, 2, 2, 3);
+
+
+SELECT c.Cust_City, p.Pname, t.Year, SUM(s.Quantity) AS TotalSales
+FROM Sales s
+JOIN Customer c ON s.CID = c.CID
+JOIN Product p ON s.PID = p.PID
+JOIN TimeLine t ON s.TID = t.TID
+GROUP BY ROLLUP(c.Cust_City, p.Pname, t.Year);
+
+SELECT c.Cust_City, p.Pname, t.Year, SUM(s.Quantity) AS TotalSales
+FROM Sales s
+JOIN Customer c ON s.CID = c.CID
+JOIN Product p ON s.PID = p.PID
+JOIN TimeLine t ON s.TID = t.TID
+GROUP BY CUBE(c.Cust_City, p.Pname, t.Year);
+
+-----------------------------------------------------EXP5--------------------------------------
+
+CREATE TABLE Employees (
+    EmployeeID NUMBER PRIMARY KEY,
+    EmployeeName VARCHAR2(50),
+    Company VARCHAR2(50),
+    Salary NUMBER
+);
+
+
+INSERT INTO Employees (EmployeeID, EmployeeName, Company, Salary)
+VALUES (1, 'John Doe', 'TCS', 60000);
+
+INSERT INTO Employees (EmployeeID, EmployeeName, Company, Salary)
+VALUES (2, 'Jane Smith', 'TCS', 70000);
+
+INSERT INTO Employees (EmployeeID, EmployeeName, Company, Salary)
+VALUES (3, 'Bob Johnson', 'Infosys', 55000);
+
+
+
+CREATE OR REPLACE FUNCTION CountEmployeesForTCS
+RETURN NUMBER IS
+    employee_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO employee_count
+    FROM Employees
+    WHERE Company = 'TCS' AND Salary > 50000;
+
+    RETURN employee_count;
+END;
+/
+
+
+
+
+-- Example of calling the function
+DECLARE
+    total_employees NUMBER;
+BEGIN
+    total_employees := CountEmployeesForTCS;
+    DBMS_OUTPUT.PUT_LINE('Number of employees working for TCS with salary > 50000: ' || total_employees);
+END;
+/
+
+
+CREATE OR REPLACE PROCEDURE InsertEmployee(
+    pEmployeeID NUMBER,
+    pEmployeeName VARCHAR2,
+    pCompany VARCHAR2,
+    pSalary NUMBER
+) AS
+BEGIN
+    INSERT INTO Employees (EmployeeID, EmployeeName, Company, Salary)
+    VALUES (pEmployeeID, pEmployeeName, pCompany, pSalary);
+
+    COMMIT;
+
+    DBMS_OUTPUT.PUT_LINE('Employee record inserted successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error inserting employee record: ' || SQLERRM);
+        ROLLBACK;
+END InsertEmployee;
+/
+
+BEGIN
+    InsertEmployee(4, 'Alice Johnson', 'Infosys', 60000);
+END;
+/
+
+------------------------------------------------EXP6------------------------------------------
+
+
+DECLARE
+   input_num NUMBER := 5; 
+   result_square NUMBER;
+
+   FUNCTION CalculateSquare(INPUT_NUM IN NUMBER) RETURN NUMBER IS
+      OUT_SQUARE NUMBER;
+   BEGIN
+      OUT_SQUARE := INPUT_NUM * INPUT_NUM;
+      RETURN OUT_SQUARE;
+   END CalculateSquare;
+
+BEGIN
+  
+   result_square := CalculateSquare(input_num);
+   DBMS_OUTPUT.PUT_LINE('Square of ' || input_num || ' is ' || result_square);
+END;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE FindMaxOfThreeNumbers(
+    num1 IN NUMBER,
+    num2 IN NUMBER,
+    num3 IN NUMBER,
+     max_result OUT NUMBER
+) IS
+BEGIN
+    -- Initialize max_result with the first number
+    max_result := num1;
+
+    -- Check and update the maximum result
+    IF num2 > max_result THEN
+        max_result := num2;
+    END IF;
+
+    IF num3 > max_result THEN
+        max_result := num3;
+    END IF;
+
+ 
+END;
+/
+
+DECLARE
+    number1 NUMBER := 10;
+    number2 NUMBER := 20;
+    number3 NUMBER := 15;
+    max_result NUMBER; -- Declare without initializing
+
+BEGIN
+    FindMaxOfThreeNumbers(number1, number2, number3, max_result);
+
+    DBMS_OUTPUT.PUT_LINE('The maximum of ' || number1 || ', ' || number2 || ', ' || number3 || ' is: ' || max_result);
+END;
+/
+
+
+DECLARE
+TYPE NameArray IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;
+TYPE GradeArray IS TABLE OF VARCHAR2(2) INDEX BY PLS_INTEGER;
+TYPE ClassArray IS TABLE OF VARCHAR2(20) INDEX BY PLS_INTEGER;
+names NameArray;
+grades GradeArray;
+classes ClassArray;
+BEGIN
+names(1) := 'John Doe';
+names(2) := 'Jane Smith';
+names(3) := 'Bob Johnson';
+grades(1) := 'A';
+grades(2) := 'B';
+grades(3) := 'C';
+classes(1) := 'Class 10';
+classes(2) := 'Class 11';
+classes(3) := 'Class 12';
+-- Displaying students' names, grades, and classes
+FOR i IN 1..names.COUNT LOOP
+DBMS_OUTPUT.PUT_LINE('Name: ' || names(i) || ', Grade: ' || grades(i) || ', Class:
+' || classes(i));
+END LOOP;
+END;/
+
+-------------------------------------------------------EXP7-------------------------------------------------------
+
+DECLARE
+TYPE NameArray IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;
+TYPE GradeArray IS TABLE OF VARCHAR2(2) INDEX BY PLS_INTEGER;
+TYPE ClassArray IS TABLE OF VARCHAR2(20) INDEX BY PLS_INTEGER;
+names NameArray;
+grades GradeArray;
+classes ClassArray;
+BEGIN
+names(1) := 'John Doe';
+names(2) := 'Jane Smith';
+names(3) := 'Bob Johnson';
+grades(1) := 'A';
+grades(2) := 'B';
+grades(3) := 'C';
+classes(1) := 'Class 10';
+classes(2) := 'Class 11';
+classes(3) := 'Class 12';
+-- Displaying students' names, grades, and classes
+FOR i IN 1..names.COUNT LOOP
+DBMS_OUTPUT.PUT_LINE('Name: ' || names(i) || ', Grade: ' || grades(i) || ', Class:
+' || classes(i));
+END LOOP;
+END;/
+
+
+
+DECLARE
+    PROCEDURE calculate_fibonacci(limit IN NUMBER) IS
+        a NUMBER := 0;
+        b NUMBER := 1;
+        c NUMBER;
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(a);
+        DBMS_OUTPUT.PUT_LINE(b);
+
+        FOR i IN 3..limit LOOP
+            c := a + b;
+            DBMS_OUTPUT.PUT_LINE(c);
+            a := b;
+            b := c;
+        END LOOP;
+    END calculate_fibonacci;
+
+BEGIN
+    calculate_fibonacci(10); -- Change the limit as needed
+END;
+/
+--------------------------------------------------EXP8-18--------------------------------
+
+-- Create Location Table
+CREATE TABLE Location (
+    LID NUMBER PRIMARY KEY,
+    City VARCHAR2(50),
+    State VARCHAR2(50),
+    Country VARCHAR2(50)
+);
+
+-- Create Product Table
+CREATE TABLE Product (
+    PID NUMBER PRIMARY KEY,
+    Pname VARCHAR2(50),
+    Price NUMBER,
+    Category VARCHAR2(50)
+);
+
+-- Create Customer Table
+CREATE TABLE Customer (
+    CID NUMBER PRIMARY KEY,
+    Cname VARCHAR2(50),
+    Cust_City VARCHAR2(50),
+    Cust_State VARCHAR2(50)
+);
+
+-- Create TimeLine Table
+CREATE TABLE TimeLine (
+    TID NUMBER PRIMARY KEY,
+    SaleDate DATE,
+    SaleDay VARCHAR2(10),
+    Month VARCHAR2(20),
+    Year NUMBER
+);
+
+-- Create Sales Table
+CREATE TABLE Sales (
+    CID NUMBER,
+    LID NUMBER,
+    TID NUMBER,
+    PID NUMBER,
+    Quantity NUMBER,
+    FOREIGN KEY (CID) REFERENCES Customer(CID),
+    FOREIGN KEY (LID) REFERENCES Location(LID),
+    FOREIGN KEY (TID) REFERENCES TimeLine(TID),
+    FOREIGN KEY (PID) REFERENCES Product(PID)
+);
+
+-- Insert values into Location Table
+INSERT INTO Location VALUES (1, 'CityA', 'StateA', 'CountryA');
+INSERT INTO Location VALUES (2, 'CityB', 'StateB', 'CountryB');
+
+-- Insert values into Product Table
+INSERT INTO Product VALUES (1, 'ProductA', 20.99, 'CategoryA');
+INSERT INTO Product VALUES (2, 'ProductB', 15.50, 'CategoryB');
+
+-- Insert values into Customer Table
+INSERT INTO Customer VALUES (1, 'CustomerA', 'CityA', 'StateA');
+INSERT INTO Customer VALUES (2, 'CustomerB', 'CityB', 'StateB');
+
+-- Insert values into TimeLine Table
+INSERT INTO TimeLine VALUES (1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), 'Monday', 'January', 2023);
+INSERT INTO TimeLine VALUES (2, TO_DATE('2023-02-01', 'YYYY-MM-DD'), 'Wednesday', 'February', 2023);
+
+-- Insert values into Sales Table
+INSERT INTO Sales VALUES (1, 1, 1, 1, 5);
+INSERT INTO Sales VALUES (2, 2, 2, 2, 3);
+
+
+SELECT
+    L.City,
+    P.Pname,
+    SUM(S.Quantity) AS TotalSales
+FROM
+    Sales S
+JOIN
+    Location L ON S.LID = L.LID
+JOIN
+    Product P ON S.PID = P.PID
+GROUP BY
+    L.City, P.Pname;
+
+
+SELECT
+    C.Cust_State,
+    COUNT(DISTINCT C.CID) AS CustomerCount
+FROM
+    Customer C
+JOIN
+    Sales S ON C.CID = S.CID
+GROUP BY
+    C.Cust_State;
+
+
+
+
+SELECT
+    C.Cust_State,
+    COUNT(DISTINCT C.CID) AS CustomerCount
+FROM
+    Customer C
+JOIN
+    Sales S ON C.CID = S.CID
+GROUP BY
+    C.Cust_State;
+
+
+SELECT
+    T.Year,
+    SUM(S.Quantity) AS TotalSales
+FROM
+    Sales S
+JOIN
+    TimeLine T ON S.TID = T.TID
+GROUP BY
+    T.Year;
+
+
+
+SELECT
+    Pname
+FROM
+    Product
+WHERE
+    Price = (SELECT MAX(Price) FROM Product);
+
+
+
+
+
+SELECT
+    P.PID,
+    P.Pname,
+    P.Price,
+    C.CID,
+    C.Cname,
+    S.Quantity,
+    T.SaleDate
+FROM
+    Sales S
+JOIN
+    Product P ON S.PID = P.PID
+JOIN
+    Customer C ON S.CID = C.CID
+JOIN
+    TimeLine T ON S.TID = T.TID
+WHERE
+    T.Month = 'January';
+-------------------------------EXP9-------------------------------------------------------
+
+DECLARE
+    length NUMBER := 5;
+    width NUMBER := 3;
+    side NUMBER := 4;
+    area NUMBER;
+
+BEGIN
+    CASE
+        WHEN length IS NOT NULL AND width IS NOT NULL THEN
+            area := length * width;
+            DBMS_OUTPUT.PUT_LINE('Area of Rectangle: ' || area);
+
+        WHEN side IS NOT NULL THEN
+            area := side * side;
+            DBMS_OUTPUT.PUT_LINE('Area of Square: ' || area);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid input for shape.');
+
+    END CASE;
+END;
+/
+
+
+
+CREATE OR REPLACE PROCEDURE FindMaxOfThreeNumbers(
+    num1 IN NUMBER,
+    num2 IN NUMBER,
+    num3 IN NUMBER,
+     max_result OUT NUMBER
+) IS
+BEGIN
+    -- Initialize max_result with the first number
+    max_result := num1;
+
+    -- Check and update the maximum result
+    IF num2 > max_result THEN
+        max_result := num2;
+    END IF;
+
+    IF num3 > max_result THEN
+        max_result := num3;
+    END IF;
+
+ 
+END;
+/
+
+DECLARE
+    number1 NUMBER := 10;
+    number2 NUMBER := 20;
+    number3 NUMBER := 15;
+    max_result NUMBER; -- Declare without initializing
+
+BEGIN
+    FindMaxOfThreeNumbers(number1, number2, number3, max_result);
+
+    DBMS_OUTPUT.PUT_LINE('The maximum of ' || number1 || ', ' || number2 || ', ' || number3 || ' is: ' || max_result);
+END;
+
+--------------------------------------------EXP10---------------------------
+
+CREATE OR REPLACE FUNCTION is_prime(p_number NUMBER) RETURN NUMBER IS
+    v_is_prime NUMBER := 1;
+BEGIN
+    FOR i IN 2..p_number/2 LOOP
+        IF MOD(p_number, i) = 0 THEN
+            v_is_prime := 0;
+            EXIT;
+        END IF;
+    END LOOP;
+
+    RETURN v_is_prime;
+END is_prime;
+/
+
+-- Example usage:
+DECLARE
+    num_to_check NUMBER := 17; -- Change the number as needed
+    result NUMBER;
+BEGIN
+    result := is_prime(num_to_check);
+    DBMS_OUTPUT.PUT_LINE('Is ' || num_to_check || ' prime? ' || result);
+END;
+/
+
+DECLARE
+    length NUMBER := 5;
+    width NUMBER := 3;
+    side NUMBER := 4;
+    area NUMBER;
+
+BEGIN
+    CASE
+        WHEN length IS NOT NULL AND width IS NOT NULL THEN
+            area := length * width;
+            DBMS_OUTPUT.PUT_LINE('Area of Rectangle: ' || area);
+
+        WHEN side IS NOT NULL THEN
+            area := side * side;
+            DBMS_OUTPUT.PUT_LINE('Area of Square: ' || area);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid input for shape.');
+
+    END CASE;
+END;
+/
+
+-------------------------------------------EXP11--------------------------------------------------
+
+DECLARE
+   input_num NUMBER := 5; 
+   result_square NUMBER;
+
+   FUNCTION CalculateSquare(INPUT_NUM IN NUMBER) RETURN NUMBER IS
+      OUT_SQUARE NUMBER;
+   BEGIN
+      OUT_SQUARE := INPUT_NUM * INPUT_NUM;
+      RETURN OUT_SQUARE;
+   END CalculateSquare;
+
+BEGIN
+  
+   result_square := CalculateSquare(input_num);
+   DBMS_OUTPUT.PUT_LINE('Square of ' || input_num || ' is ' || result_square);
+END;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE FindMaxOfThreeNumbers(
+    num1 IN NUMBER,
+    num2 IN NUMBER,
+    num3 IN NUMBER,
+     max_result OUT NUMBER
+) IS
+BEGIN
+    -- Initialize max_result with the first number
+    max_result := num1;
+
+    -- Check and update the maximum result
+    IF num2 > max_result THEN
+        max_result := num2;
+    END IF;
+
+    IF num3 > max_result THEN
+        max_result := num3;
+    END IF;
+
+ 
+END;
+/
+
+DECLARE
+    number1 NUMBER := 10;
+    number2 NUMBER := 20;
+    number3 NUMBER := 15;
+    max_result NUMBER; -- Declare without initializing
+
+BEGIN
+    FindMaxOfThreeNumbers(number1, number2, number3, max_result);
+
+    DBMS_OUTPUT.PUT_LINE('The maximum of ' || number1 || ', ' || number2 || ', ' || number3 || ' is: ' || max_result);
+END;
+/
+
+
+DECLARE
+choice NUMBER := 2;
+radius NUMBER := 5;
+
+area_result NUMBER;
+BEGIN
+CASE choice
+WHEN 1 THEN
+area_result := 3.14 * radius * radius; -- Area of Circle
+WHEN 2 THEN
+area_result := 0.5 * radius * radius; -- Area of Triangle
+ELSE
+area_result := 0; -- Default case or error handling
+END CASE;
+DBMS_OUTPUT.PUT_LINE('Area is: ' || area_result);
+END;/
+
+
+----------------------------------------EXP12-----------------------------
+
+DECLARE
+    side NUMBER := 4;
+    base NUMBER := 5;
+    height NUMBER := 3;
+    area NUMBER;
+
+BEGIN
+    CASE
+        WHEN base IS NOT NULL AND height IS NOT NULL THEN
+            area := 0.5 * base * height;
+            DBMS_OUTPUT.PUT_LINE('Area of Triangle: ' || area);
+
+        WHEN side IS NOT NULL THEN
+            area := side * side;
+            DBMS_OUTPUT.PUT_LINE('Area of Square: ' || area);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid input for shape.');
+
+    END CASE;
+END;
+/
+
+
+DECLARE
+    PROCEDURE calculate_fibonacci(limit IN NUMBER) IS
+        a NUMBER := 0;
+        b NUMBER := 1;
+        c NUMBER;
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(a);
+        DBMS_OUTPUT.PUT_LINE(b);
+
+        FOR i IN 3..limit LOOP
+            c := a + b;
+            DBMS_OUTPUT.PUT_LINE(c);
+            a := b;
+            b := c;
+        END LOOP;
+    END calculate_fibonacci;
+
+BEGIN
+    calculate_fibonacci(10); -- Change the limit as needed
+END;
+/
+
+----------------------------------------------EXP13 14--------------------------------
+
+CREATE OR REPLACE PROCEDURE calculate_even_odd_sum(p_n IN NUMBER) IS
+    v_even_sum NUMBER := 0;
+    v_odd_sum NUMBER := 0;
+BEGIN
+    FOR i IN 1..p_n LOOP
+        IF MOD(i, 2) = 0 THEN
+            v_even_sum := v_even_sum + i;
+        ELSE
+            v_odd_sum := v_odd_sum + i;
+        END IF;
+    END LOOP;
+
+    DBMS_OUTPUT.PUT_LINE('Sum of even numbers up to ' || p_n || ': ' || v_even_sum);
+    DBMS_OUTPUT.PUT_LINE('Sum of odd numbers up to ' || p_n || ': ' || v_odd_sum);
+END calculate_even_odd_sum;
+/
+
+-- Example usage:
+DECLARE
+    n_value NUMBER := 10; -- Change the value of n as needed
+BEGIN
+    calculate_even_odd_sum(n_value);
+END;
+/
+
+
+-- Create a package to represent the Circle object
+CREATE OR REPLACE PACKAGE CirclePackage AS
+    TYPE Circle IS OBJECT (
+        radius NUMBER,
+        MEMBER FUNCTION calculate_area RETURN NUMBER,
+        MEMBER FUNCTION calculate_perimeter RETURN NUMBER
+    );
+
+    -- Create a constructor function for the Circle object
+    FUNCTION CreateCircle(radius NUMBER) RETURN Circle;
+END CirclePackage;
+/
+
+CREATE OR REPLACE PACKAGE BODY CirclePackage AS
+    FUNCTION CreateCircle(radius NUMBER) RETURN Circle IS
+    BEGIN
+        RETURN Circle(radius);
+    END CreateCircle;
+
+    MEMBER FUNCTION Circle.calculate_area RETURN NUMBER IS
+    BEGIN
+        RETURN 3.14 * self.radius * self.radius;
+    END calculate_area;
+
+    MEMBER FUNCTION Circle.calculate_perimeter RETURN NUMBER IS
+    BEGIN
+        RETURN 2 * 3.14 * self.radius;
+    END calculate_perimeter;
+END CirclePackage;
+/
+
+-- Example of using the Circle object
+DECLARE
+    -- Declare a Circle object
+    my_circle CirclePackage.Circle := CirclePackage.CreateCircle(5);
+
+    -- Variables to store area and perimeter
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    -- Calculate area and perimeter using object methods
+    area := my_circle.calculate_area();
+    perimeter := my_circle.calculate_perimeter();
+
+    -- Display the results
+    DBMS_OUTPUT.PUT_LINE('Area of the circle: ' || area);
+    DBMS_OUTPUT.PUT_LINE('Perimeter of the circle: ' || perimeter);
+END;
+/
+
+-- Create a package to represent the Square object
+CREATE OR REPLACE PACKAGE SquarePackage AS
+    TYPE Square IS OBJECT (
+        side NUMBER,
+        MEMBER FUNCTION calculate_area RETURN NUMBER,
+        MEMBER FUNCTION calculate_perimeter RETURN NUMBER
+    );
+
+    -- Create a constructor function for the Square object
+    FUNCTION CreateSquare(side NUMBER) RETURN Square;
+END SquarePackage;
+/
+
+CREATE OR REPLACE PACKAGE BODY SquarePackage AS
+    FUNCTION CreateSquare(side NUMBER) RETURN Square IS
+    BEGIN
+        RETURN Square(side);
+    END CreateSquare;
+
+    MEMBER FUNCTION Square.calculate_area RETURN NUMBER IS
+    BEGIN
+        RETURN self.side * self.side;
+    END calculate_area;
+
+    MEMBER FUNCTION Square.calculate_perimeter RETURN NUMBER IS
+    BEGIN
+        RETURN 4 * self.side;
+    END calculate_perimeter;
+END SquarePackage;
+/
+
+-- Example of using the Square object
+DECLARE
+    -- Declare a Square object
+    my_square SquarePackage.Square := SquarePackage.CreateSquare(5);
+
+    -- Variables to store area and perimeter
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    -- Calculate area and perimeter using object methods
+    area := my_square.calculate_area();
+    perimeter := my_square.calculate_perimeter();
+
+    -- Display the results
+    DBMS_OUTPUT.PUT_LINE('Area of the square: ' || area);
+    DBMS_OUTPUT.PUT_LINE('Perimeter of the square: ' || perimeter);
+END;
+/
+------------------------------------EXP15---------------------------------
+
+DECLARE
+    shape_type VARCHAR2(10) := 'circle'; -- Change to 'square' as needed
+    radius NUMBER := 5; -- Change to the desired radius or side length
+    side NUMBER := 5;   -- Change to the desired radius or side length
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    IF shape_type = 'circle' THEN
+        area := 3.14 * radius * radius;
+        perimeter := 2 * 3.14 * radius;
+        DBMS_OUTPUT.PUT_LINE('Area of the circle: ' || area);
+        DBMS_OUTPUT.PUT_LINE('Perimeter of the circle: ' || perimeter);
+
+    ELSIF shape_type = 'square' THEN
+        area := side * side;
+        perimeter := 4 * side;
+        DBMS_OUTPUT.PUT_LINE('Area of the square: ' || area);
+        DBMS_OUTPUT.PUT_LINE('Perimeter of the square: ' || perimeter);
+
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Invalid shape type.');
+    END IF;
+END;
+/
+
+DECLARE
+    PROCEDURE calculate_fibonacci(limit IN NUMBER) IS
+        a NUMBER := 0;
+        b NUMBER := 1;
+        c NUMBER;
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(a);
+        DBMS_OUTPUT.PUT_LINE(b);
+
+        FOR i IN 3..limit LOOP
+            c := a + b;
+            DBMS_OUTPUT.PUT_LINE(c);
+            a := b;
+            b := c;
+        END LOOP;
+    END calculate_fibonacci;
+
+BEGIN
+    calculate_fibonacci(10); -- Change the limit as needed
+END;
+/
+
+--------------------------EXP16-----------------------------------------
+DECLARE
+    side NUMBER := 4;
+    base NUMBER := 5;
+    height NUMBER := 3;
+    area NUMBER;
+
+BEGIN
+    CASE
+        WHEN base IS NOT NULL AND height IS NOT NULL THEN
+            area := 0.5 * base * height;
+            DBMS_OUTPUT.PUT_LINE('Area of Triangle: ' || area);
+
+        WHEN side IS NOT NULL THEN
+            area := side * side;
+            DBMS_OUTPUT.PUT_LINE('Area of Square: ' || area);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid input for shape.');
+
+    END CASE;
+END;
+/
+
+
+CREATE TYPE Rectangle AS OBJECT (
+length NUMBER,
+width NUMBER,
+MEMBER FUNCTION Area RETURN NUMBER,
+MEMBER FUNCTION Perimeter RETURN NUMBER
+);
+
+
+
+
+
+CREATE TYPE BODY Rectangle AS
+MEMBER FUNCTION Area RETURN NUMBER IS
+BEGIN
+RETURN length * width;
+END;
+MEMBER FUNCTION Perimeter RETURN NUMBER IS
+BEGIN
+RETURN 2 * (length + width);
+END;
+END;
+
+
+
+
+
+DECLARE
+rect Rectangle := Rectangle(5, 10);
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Area: ' || rect.Area);
+DBMS_OUTPUT.PUT_LINE('Perimeter: ' || rect.Perimeter);
+END;

@@ -1,0 +1,40 @@
+DECLARE
+choice NUMBER := 2;
+radius NUMBER := 5;
+
+area_result NUMBER;
+BEGIN
+CASE choice
+WHEN 1 THEN
+area_result := 3.14 * radius * radius; -- Area of Circle
+WHEN 2 THEN
+area_result := 0.5 * radius * radius; -- Area of Triangle
+ELSE
+area_result := 0; -- Default case or error handling
+END CASE;
+DBMS_OUTPUT.PUT_LINE('Area is: ' || area_result);
+END;/
+
+
+CREATE TABLE Employee1 (
+   EmployeeID NUMBER PRIMARY KEY,
+   Ename VARCHAR2(50),
+   Salary NUMBER,
+   City VARCHAR2(50)
+);
+
+CREATE SEQUENCE EmployeeIDSequence
+   START WITH 1
+   INCREMENT BY 1
+   NOCACHE
+   NOCYCLE;
+
+INSERT INTO Employee1(EmployeeID, Ename, Salary, City)
+VALUES (EmployeeIDSequence.NEXTVAL, 'John Doe', 60000, 'New York');
+
+INSERT INTO Employee1(EmployeeID, Ename, Salary, City)
+VALUES (EmployeeIDSequence.NEXTVAL, 'John', 6000, 'New York');
+
+select * from Employee1;
+
+DELETE FROM Employee1 WHERE EmployeeID = 1;

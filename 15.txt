@@ -1,0 +1,46 @@
+DECLARE
+    shape_type VARCHAR2(10) := 'circle'; -- Change to 'square' as needed
+    radius NUMBER := 5; -- Change to the desired radius or side length
+    side NUMBER := 5;   -- Change to the desired radius or side length
+    area NUMBER;
+    perimeter NUMBER;
+BEGIN
+    IF shape_type = 'circle' THEN
+        area := 3.14 * radius * radius;
+        perimeter := 2 * 3.14 * radius;
+        DBMS_OUTPUT.PUT_LINE('Area of the circle: ' || area);
+        DBMS_OUTPUT.PUT_LINE('Perimeter of the circle: ' || perimeter);
+
+    ELSIF shape_type = 'square' THEN
+        area := side * side;
+        perimeter := 4 * side;
+        DBMS_OUTPUT.PUT_LINE('Area of the square: ' || area);
+        DBMS_OUTPUT.PUT_LINE('Perimeter of the square: ' || perimeter);
+
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Invalid shape type.');
+    END IF;
+END;
+/
+
+DECLARE
+    PROCEDURE calculate_fibonacci(limit IN NUMBER) IS
+        a NUMBER := 0;
+        b NUMBER := 1;
+        c NUMBER;
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(a);
+        DBMS_OUTPUT.PUT_LINE(b);
+
+        FOR i IN 3..limit LOOP
+            c := a + b;
+            DBMS_OUTPUT.PUT_LINE(c);
+            a := b;
+            b := c;
+        END LOOP;
+    END calculate_fibonacci;
+
+BEGIN
+    calculate_fibonacci(10); -- Change the limit as needed
+END;
+/

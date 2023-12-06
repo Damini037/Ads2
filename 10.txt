@@ -1,0 +1,46 @@
+CREATE OR REPLACE FUNCTION is_prime(p_number NUMBER) RETURN NUMBER IS
+    v_is_prime NUMBER := 1;
+BEGIN
+    FOR i IN 2..p_number/2 LOOP
+        IF MOD(p_number, i) = 0 THEN
+            v_is_prime := 0;
+            EXIT;
+        END IF;
+    END LOOP;
+
+    RETURN v_is_prime;
+END is_prime;
+/
+
+-- Example usage:
+DECLARE
+    num_to_check NUMBER := 17; -- Change the number as needed
+    result NUMBER;
+BEGIN
+    result := is_prime(num_to_check);
+    DBMS_OUTPUT.PUT_LINE('Is ' || num_to_check || ' prime? ' || result);
+END;
+/
+
+DECLARE
+    length NUMBER := 5;
+    width NUMBER := 3;
+    side NUMBER := 4;
+    area NUMBER;
+
+BEGIN
+    CASE
+        WHEN length IS NOT NULL AND width IS NOT NULL THEN
+            area := length * width;
+            DBMS_OUTPUT.PUT_LINE('Area of Rectangle: ' || area);
+
+        WHEN side IS NOT NULL THEN
+            area := side * side;
+            DBMS_OUTPUT.PUT_LINE('Area of Square: ' || area);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid input for shape.');
+
+    END CASE;
+END;
+/
